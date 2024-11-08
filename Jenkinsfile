@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = 'https://github.com/1hadil/TpFoyer'
+        GIT_REPO = 'https://github.com/1hadil/TpFoyer.git'
         GIT_CREDENTIALS_ID = 'github_token'
         
     }
