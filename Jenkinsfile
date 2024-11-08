@@ -31,7 +31,12 @@ pipeline {
             }
         }
 
-       
+       stage('Test') {
+                   steps {
+                       // Exécuter les tests unitaires
+                       sh 'mvn test'
+                   }
+               }
         
 
       
