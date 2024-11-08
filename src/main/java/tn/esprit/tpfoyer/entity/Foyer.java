@@ -34,5 +34,6 @@ public class Foyer {
     Set<Bloc> blocs;
 
 }
+/* entity for aziz */
 
 
