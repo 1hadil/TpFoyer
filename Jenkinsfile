@@ -7,6 +7,7 @@ pipeline {
         SONAR_TOKEN = 'sonar_id'
                 SONAR_PROJECT_KEY = 'projet_devops'
                 SONAR_PROJECT_NAME = 'projet_devops'
+                SONAR_HOST_URL = 'http://192.168.50.4:9000'
         
     }
 
