@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
-public class ReservationServiceWithMocksTest {
+ class ReservationServiceWithMocksTest {
     @Mock
     private ReservationRepository reservationRepository;
 
@@ -29,7 +29,7 @@ public class ReservationServiceWithMocksTest {
     private Reservation reservation;
 
     @BeforeEach
-    public void setup() {
+     void setup() {
         reservation = new Reservation();
         reservation.setIdReservation("1");
         reservation.setAnneeUniversitaire(new Date());
@@ -37,7 +37,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testRetrieveAllReservations() {
+     void testRetrieveAllReservations() {
         List<Reservation> reservations = new ArrayList<>();
         reservations.add(reservation);
 
@@ -49,7 +49,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testRetrieveReservation() {
+     void testRetrieveReservation() {
         when(reservationRepository.findById("1")).thenReturn(Optional.of(reservation));
 
         Reservation result = reservationService.retrieveReservation("1");
@@ -59,7 +59,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testAddReservation() {
+     void testAddReservation() {
         when(reservationRepository.save(reservation)).thenReturn(reservation);
 
         Reservation result = reservationService.addReservation(reservation);
@@ -69,7 +69,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testModifyReservation() {
+     void testModifyReservation() {
         when(reservationRepository.save(reservation)).thenReturn(reservation);
 
         Reservation result = reservationService.modifyReservation(reservation);
@@ -79,7 +79,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testRemoveReservation() {
+     void testRemoveReservation() {
         doNothing().when(reservationRepository).deleteById("1");
 
         reservationService.removeReservation("1");
@@ -87,7 +87,7 @@ public class ReservationServiceWithMocksTest {
     }
 
     @Test
-    public void testTrouverResSelonDateEtStatus() {
+     void testTrouverResSelonDateEtStatus() {
         List<Reservation> reservations = new ArrayList<>();
         reservations.add(reservation);
 
