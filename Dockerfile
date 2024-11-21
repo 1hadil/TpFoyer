@@ -6,5 +6,5 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=builder /app/target/firstProject-5.0.0.jar app.jar
+COPY --from=builder /app/target/tp-foyer-5.0.0.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
