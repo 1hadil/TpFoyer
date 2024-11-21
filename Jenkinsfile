@@ -73,14 +73,14 @@ pipeline {
         }
 	    stage('Start Test Database') {
             steps {
-                sh 'docker-compose -f docker-compose.yml up -d mysql'
+                sh 'docker compose -f docker-compose.yml up -d mysql'
             }
         }
         stage('Docker-Compose') {
             steps {
                 sh 'docker ps'
-                sh 'docker-compose logs'
-		sh 'docker-compose up -d'
+                sh 'docker compose logs'
+		sh 'docker compose up -d'
 		
             }
         }
