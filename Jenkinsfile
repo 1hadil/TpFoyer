@@ -142,7 +142,7 @@ pipeline {
                 SONAR_HOST_URL = 'http://192.168.50.4:9000'
                 //DOCKER_HUB_CREDENTIALS_ID = 'dockerhub_credentials'
                //DOCKER_IMAGE_NAME = 'emnaesprit/monimage'
-        
+        //test
     }
 
     stages {
