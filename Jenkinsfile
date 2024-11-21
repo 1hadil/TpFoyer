@@ -25,7 +25,7 @@ pipeline {
                         sh 'rm -rf target'
                     }
                 }
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean package '
             }
         }
 
