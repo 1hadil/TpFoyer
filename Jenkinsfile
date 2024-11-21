@@ -11,13 +11,13 @@ pipeline {
     }
 
     stages {
-        stage('Récupération du code') {
+        stage('GIT') {
             steps {
                 git branch: 'Emna', credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO}"
             }
         }
 
-        stage('Construction Maven') {
+        stage('MAVEN BUILD') {
             steps {
                 script {
                     if (fileExists('target')) {
@@ -29,13 +29,9 @@ pipeline {
             }
         }
 
-        stage('Tests unitaires') {
-            steps {
-                sh 'mvn test'
-            }
-        }
 
-        stage('Analyse SonarQube') {
+
+        stage('SONARQUBE') {
             environment {
                 SONAR_TOKEN = credentials('sonar_id')
             }
@@ -56,6 +52,11 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
+         stage('MOCKITO') {
+                    steps {
+                        sh 'mvn test'
+                    }
+                }
     }
 
     post {
