@@ -8,37 +8,39 @@ pipeline {
         SONAR_PROJECT_KEY = 'projet_devops'
         SONAR_PROJECT_NAME = 'projet_devops'
         SONAR_HOST_URL = 'http://192.168.50.4:9000'
-        //IA test
     }
 
     stages {
-        stage('GIT') {
+        stage('Récupération du code') {
             steps {
-                // Récupérer le code source depuis le dépôt Git
                 git branch: 'Emna', credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO}"
             }
         }
 
-        stage('MAVEN BUILD') {
-             steps {
-                            script {
-                                if (fileExists('target')) {
-                                    echo 'Cleaning target directory...'
-                                    sh 'rm -rf target'
-                                }
-                            }
-                            sh 'mvn clean package -DskipTests'
-
-                        }
+        stage('Construction Maven') {
+            steps {
+                script {
+                    if (fileExists('target')) {
+                        echo 'Nettoyage du répertoire target...'
+                        sh 'rm -rf target'
+                    }
+                }
+                sh 'mvn clean package -DskipTests'
+            }
         }
 
-        stage('SONARQUBE') {
+        stage('Tests unitaires') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Analyse SonarQube') {
             environment {
-                SONAR_TOKEN = credentials('sonar_id') // Récupérer le jeton de manière sécurisée
+                SONAR_TOKEN = credentials('sonar_id')
             }
             steps {
                 script {
-                    // Lancer l'analyse SonarQube
                     sh """
                         mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
@@ -49,23 +51,15 @@ pipeline {
                             -Dsonar.tests=src/test/java \
                             -Dsonar.java.binaries=target/classes
                     """
-                }sh 'mvn jacoco:prepare-agent test jacoco:report'
-                                         archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-
-            }
-        }
-
-        stage('Mockito') {
-            steps {
-                // Exécuter les tests avec Mockito (inclus dans les tests unitaires Maven)
-                sh 'mvn test'
+                }
+                sh 'mvn jacoco:prepare-agent test jacoco:report'
+                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
     }
 
     post {
         always {
-            // Nettoyer le workspace après l'exécution du pipeline
             echo 'Nettoyage du workspace...'
             cleanWs()
         }
@@ -77,9 +71,6 @@ pipeline {
         }
     }
 }
-
-
-
 
 
 /*pipeline {
