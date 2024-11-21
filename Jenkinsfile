@@ -57,6 +57,33 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
+	    stage('Upload to Nexus') {
+            steps {
+                script {
+                    def nexusUrl = "http://192.168.50.4:8081/repository/"
+                    def artifactId = "tp-foyer"
+                    def version = "5.0.0"
+                    def packaging = "jar"
+                    def nexusUser = "admin"
+                    def nexusPassword = "Nexus"
+                    def repository = "maven-releases"
+
+                    sh """
+                    mvn deploy:deploy-file \
+                        -DgroupId=tn.esprit \
+                        -DartifactId=${artifactId} \
+                        -Dversion=${version} \
+                        -Dpackaging=${packaging} \
+                        -Dfile=target/${artifactId}-${version}.${packaging} \
+                        -DrepositoryId=deploymentRepo \
+                        -Durl=${nexusUrl}${repository}/ \
+                        -DpomFile=pom.xml \
+                        -Dusername=${nexusUser} \
+                        -Dpassword=${nexusPassword}
+                    """
+                }
+            }
+        }
         stage('DOCKER IMAGE') {
             steps {
                 sh 'docker build -t emnaesprit/emna .'
