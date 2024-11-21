@@ -1,4 +1,4 @@
-pipeline {
+/*pipeline {
     agent any
 
     environment {
@@ -61,13 +61,13 @@ pipeline {
                     }
                 }
 
-                /*stage('Nexus'){
+                stage('Nexus'){
                     steps {
                             sh 'mvn deploy -DskipTests -Dusername=${NEXUS_USER} -Dpassword=${NEXUS_PASS}'
                     }
-                }*/
+                }
 
-              /*  stage('Docker Images') {
+                stage('Docker Images') {
                             steps {
                                 script {
                                     sh "docker build -t ${DOCKER_IMAGE_NAME}:latest ."
@@ -110,7 +110,7 @@ pipeline {
                         }
                     }
                 }
-            }*/
+            }
         }
 
     post {
@@ -125,12 +125,12 @@ pipeline {
             echo 'Build failed. Check the logs for details.'
         }
     }
-}
+}*/
 
 
 
 
-/*pipeline {
+pipeline {
     agent any
 
     environment {
@@ -274,4 +274,4 @@ pipeline {
             echo 'Build failed. Check the logs for details.'
         }
     }
-}*/
+}
