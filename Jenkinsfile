@@ -20,10 +20,16 @@ pipeline {
         }
 
         stage('MAVEN BUILD') {
-            steps {
-                // Nettoyer et construire le projet sans exécuter les tests
-                sh 'mvn clean package -DskipTests'
-            }
+             steps {
+                            script {
+                                if (fileExists('target')) {
+                                    echo 'Cleaning target directory...'
+                                    sh 'rm -rf target'
+                                }
+                            }
+                            sh 'mvn clean package -DskipTests'
+
+                        }
         }
 
         stage('SONARQUBE') {
@@ -43,7 +49,9 @@ pipeline {
                             -Dsonar.tests=src/test/java \
                             -Dsonar.java.binaries=target/classes
                     """
-                }
+                }sh 'mvn jacoco:prepare-agent test jacoco:report'
+                                         archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+
             }
         }
 
