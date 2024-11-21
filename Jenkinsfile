@@ -140,8 +140,8 @@ pipeline {
                 SONAR_PROJECT_KEY = 'projet_devops'
                 SONAR_PROJECT_NAME = 'projet_devops'
                 SONAR_HOST_URL = 'http://192.168.50.4:9000'
-                DOCKER_HUB_CREDENTIALS_ID = 'dockerhub_credentials'
-                DOCKER_IMAGE_NAME = 'emnaesprit/monimage'
+                //DOCKER_HUB_CREDENTIALS_ID = 'dockerhub_credentials'
+               //DOCKER_IMAGE_NAME = 'emnaesprit/monimage'
         
     }
 
@@ -211,7 +211,7 @@ pipeline {
             }
         }
 
-    stage('Build Docker Image') {
+    /*stage('Build Docker Image') {
                 steps {
                     script {
                         sh "docker build -t ${DOCKER_IMAGE_NAME}:latest ."
@@ -258,7 +258,7 @@ pipeline {
                         }
                     }
                 }
-            }
+            }*/
         }
 
     post {
