@@ -51,12 +51,7 @@ stages {
 
       
 
-        stage('Archive Artifacts') {
-            steps {
-                // Archive the jar files created during the build
-                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            }
-        }
+        
         stage('SonarQube Analysis') {
             environment {
                 SONAR_TOKEN = credentials('sonar_id') // Fetch securely from Jenkins credentials
@@ -76,7 +71,14 @@ stages {
                 }
             }
         }
+    stage('Archive Artifacts') {
+            steps {
+                // Archive the jar files created during the build
+                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+            }
+        }
     }
+    
 
     post {
         // Optional: Handle build outcomes
