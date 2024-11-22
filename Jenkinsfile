@@ -108,6 +108,27 @@ pipeline {
 		
             }
         }
+	    stage('GRAFANA') {
+    steps {
+        script {
+            // Vérification de l'existence des conteneurs Prometheus et Grafana
+            def prometheusExists = sh(script: "docker ps -a --filter 'name=prometheus' --format '{{.ID}}'", returnStdout: true).trim()
+            def grafanaExists = sh(script: "docker ps -a --filter 'name=grafana' --format '{{.ID}}'", returnStdout: true).trim()
+
+            // Exécution de docker-compose pour démarrer les conteneurs si nécessaire
+            if (!prometheusExists || !grafanaExists) {
+                echo 'Un ou plusieurs conteneurs pour Grafana et Prometheus sont manquants; démarrage des conteneurs...'
+                sh "docker-compose -f docker-compose-monitoring.yml up -d"
+            } else {
+                echo 'Tous les conteneurs pour Grafana et Prometheus existent déjà; aucune action nécessaire.'
+            }
+
+            // Affichage des logs pour vérifier si tout s'est bien passé
+            sh "docker-compose -f docker-compose-monitoring.yml logs"
+        }
+    }
+}
+
 	    
     stage('MAIL') {
             steps {
