@@ -40,6 +40,12 @@ stages {
             }
         }
 
+    stage('DOCKER IMAGE') {
+            steps {
+                sh 'docker build -t omaimaben/oumaimaesp .'
+            }
+        }
+
        
         
 
