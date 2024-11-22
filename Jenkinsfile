@@ -118,13 +118,13 @@ pipeline {
             // Exécution de docker-compose pour démarrer les conteneurs si nécessaire
             if (!prometheusExists || !grafanaExists) {
                 echo 'Un ou plusieurs conteneurs pour Grafana et Prometheus sont manquants; démarrage des conteneurs...'
-                sh "docker-compose -f docker-compose-monitoring.yml up -d"
+                sh "docker compose -f docker-compose-monitoring.yml up -d"
             } else {
                 echo 'Tous les conteneurs pour Grafana et Prometheus existent déjà; aucune action nécessaire.'
             }
 
             // Affichage des logs pour vérifier si tout s'est bien passé
-            sh "docker-compose -f docker-compose-monitoring.yml logs"
+            sh "docker compose -f docker-compose-monitoring.yml logs"
         }
     }
 }
