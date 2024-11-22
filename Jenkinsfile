@@ -57,6 +57,11 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
+	    stage('Nexus'){
+                    steps {
+                            sh 'mvn deploy -DskipTests -Dusername=${NEXUS_USER} -Dpassword=${NEXUS_PASS}'
+                    }
+                }
 	    
         stage('DOCKER IMAGE') {
             steps {
