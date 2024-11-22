@@ -4,51 +4,55 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/1hadil/TpFoyer.git'
         GIT_CREDENTIALS_ID = 'GitHubToken'
+        SONAR_HOST_URL = 'http://192.168.50.4:9000'
+        SONAR_TOKEN = 'sonar_id'
+        SONAR_PROJECT_KEY = 'projet_devops'
+        SONAR_PROJECT_NAME = 'projet_devops'
         
     }
 
     stages {
-        stage('Checkout') {
+        stage('GIT') {
             steps {
                 git branch: 'OumaimaBenSaad-5infini2', credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO}"
             }
         }
 
-        stage('Clean') {
+        stage('MAVEN BUILD') {
             steps {
                 script {
                     if (fileExists('target')) {
-                        echo 'Cleaning target directory...'
+                        echo 'Nettoyage du répertoire target...'
                         sh 'rm -rf target'
                     }
                 }
+                sh 'mvn clean package '
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
+
+
+        stage('SONARQUBE') {
+            environment {
+                SONAR_TOKEN = credentials('sonar_id')
             }
-        }
-
-        stage('Run Tests') {
             steps {
-                sh 'mvn test'
-            }
-        }
-
-       
-        
-
-      
-
-        stage('Archive Artifacts') {
-            steps {
-                // Archive the jar files created during the build
+                script {
+                    sh """
+                        mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                            -Dsonar.projectName='${SONAR_PROJECT_NAME}' \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.sources=src/main/java \
+                            -Dsonar.tests=src/test/java \
+                            -Dsonar.java.binaries=target/classes
+                    """
+                }
+                sh 'mvn jacoco:prepare-agent test jacoco:report'
                 archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
-    }
 
     post {
         // Optional: Handle build outcomes
