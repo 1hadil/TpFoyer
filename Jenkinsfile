@@ -57,33 +57,7 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
-	    stage('Upload to Nexus') {
-            steps {
-                script {
-                    def nexusUrl = "http://192.168.50.4:8081/repository/"
-                    def artifactId = "tp-foyer"
-                    def version = "5.0.0"
-                    def packaging = "jar"
-                    def nexusUser = "admin"
-                    def nexusPassword = "Nexus"
-                    def repository = "maven-releases"
-
-                    sh """
-                    mvn deploy:deploy-file \
-                        -DgroupId=tn.esprit \
-                        -DartifactId=${artifactId} \
-                        -Dversion=${version} \
-                        -Dpackaging=${packaging} \
-                        -Dfile=target/${artifactId}-${version}.${packaging} \
-                        -DrepositoryId=deploymentRepo \
-                        -Durl=${nexusUrl}${repository}/ \
-                        -DpomFile=pom.xml \
-                        -Dusername=${nexusUser} \
-                        -Dpassword=${nexusPassword}
-                    """
-                }
-            }
-        }
+	    
         stage('DOCKER IMAGE') {
             steps {
                 sh 'docker build -t emnaesprit/emna .'
@@ -108,26 +82,7 @@ pipeline {
 
             }
         }
-	    stage('GRAFANA') {
-    steps {
-        script {
-            // Vérification de l'existence des conteneurs Prometheus et Grafana
-            def prometheusExists = sh(script: "docker ps -a --filter 'name=prometheus' --format '{{.ID}}'", returnStdout: true).trim()
-            def grafanaExists = sh(script: "docker ps -a --filter 'name=grafana' --format '{{.ID}}'", returnStdout: true).trim()
-
-            // Exécution de docker-compose pour démarrer les conteneurs si nécessaire
-            if (!prometheusExists || !grafanaExists) {
-                echo 'Un ou plusieurs conteneurs pour Grafana et Prometheus sont manquants; démarrage des conteneurs...'
-                sh "docker compose -f docker-compose-monotoring.yml up -d"
-            } else {
-                echo 'Tous les conteneurs pour Grafana et Prometheus existent déjà; aucune action nécessaire.'
-            }
-
-            // Affichage des logs pour vérifier si tout s'est bien passé
-            sh "docker compose -f docker-compose-monotoring.yml logs"
-        }
-    }
-}
+	    
 
 
     stage('MAIL') {
