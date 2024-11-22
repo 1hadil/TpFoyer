@@ -45,6 +45,25 @@ stages {
                 sh 'docker build -t omaimaben/oumaimaesp .'
             }
         }
+    stage('Docker Hub') {
+            steps {
+                script {
+                    echo 'Logging in to Docker Hub...'
+                }
+                sh 'docker login -u omaimaben -p omidoker1234'
+                sh 'docker push omaimaben/oumaimaesp'
+            }
+        }
+	    
+        stage('Docker-Compose') {
+            steps {
+                sh 'docker ps'
+                sh 'docker compose logs'
+		sh 'docker compose up -d'
+	        sh 'docker compose -f docker-compose.yml up -d mysql'
+		
+            }
+        }
 
        
         
