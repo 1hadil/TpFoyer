@@ -10,31 +10,50 @@ pipeline {
         SONAR_PROJECT_NAME = 'projet_devops'
         
     }
-
-    stages {
-        stage('GIT') {
+stages {
+        stage('Checkout') {
             steps {
                 git branch: 'OumaimaBenSaad-5infini2', credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO}"
             }
         }
 
-        stage('MAVEN BUILD') {
+        stage('Clean') {
             steps {
                 script {
                     if (fileExists('target')) {
-                        echo 'Nettoyage du répertoire target...'
+                        echo 'Cleaning target directory...'
                         sh 'rm -rf target'
                     }
                 }
-                sh 'mvn clean package '
             }
         }
 
+        stage('Build') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
 
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
 
-        stage('SONARQUBE') {
+       
+        
+
+      
+
+        stage('Archive Artifacts') {
+            steps {
+                // Archive the jar files created during the build
+                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+            }
+        }
+        stage('SonarQube Analysis') {
             environment {
-                SONAR_TOKEN = credentials('sonar_id')
+                SONAR_TOKEN = credentials('sonar_id') // Fetch securely from Jenkins credentials
             }
             steps {
                 script {
@@ -49,10 +68,9 @@ pipeline {
                             -Dsonar.java.binaries=target/classes
                     """
                 }
-                sh 'mvn jacoco:prepare-agent test jacoco:report'
-                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
+    }
 
     post {
         // Optional: Handle build outcomes
