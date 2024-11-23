@@ -24,5 +24,10 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
+        stage('MOCKITO') {
+                    steps {
+                        sh 'mvn test'
+                    }
+                }
     }
 }
