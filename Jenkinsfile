@@ -4,7 +4,6 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/1hadil/TpFoyer.git'
         GIT_CREDENTIALS_ID = 'github_token'
-        
     }
 
     stages {
@@ -22,6 +21,8 @@ pipeline {
                         sh 'rm -rf target'
                     }
                 }
-                sh 'mvn clean package '
+                sh 'mvn clean package'
             }
         }
+    }
+}
