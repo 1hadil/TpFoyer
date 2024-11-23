@@ -32,8 +32,27 @@ public class Foyer {
             @JsonIgnore
             @ToString.Exclude
     Set<Bloc> blocs;
+    public Long getId() {
+        return idFoyer;
+    }
+
+    public void setId(Long id) {
+        this.idFoyer = id;
+    }
+
+    public String getName() {
+        return nomFoyer;
+    }
+
+    public void setName(String name) {
+        this.nomFoyer = name;
+    }
+
+
+
 
 }
 /* entity for aziz*/
+
 
 
