@@ -28,11 +28,7 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('MOCKITO') {
-                    steps {
-                        sh 'mvn test'
-                    }
-                }
+        
         stage('SonarQube Analysis') {
             environment {
                 SONAR_TOKEN = credentials('sonar_id') // Fetch securely from Jenkins credentials
@@ -52,5 +48,15 @@ pipeline {
                 }
             }
         }
+        stage('MOCKITO') {
+                    steps {
+                        sh 'mvn test'
+                    }
+                }
+        stage('Nexus'){
+                    steps {
+                            sh 'mvn deploy -DskipTests -Dusername=${NEXUS_USER} -Dpassword=${NEXUS_PASS}'
+                    }
+                }
     }
 }
