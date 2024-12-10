@@ -58,5 +58,29 @@ pipeline {
                             sh 'mvn deploy -DskipTests -Dusername=${NEXUS_USER} -Dpassword=${NEXUS_PASS}'
                     }
                 }
+        stage('DOCKER IMAGE') {
+            steps {
+                sh 'docker build -t azizdevops12/aziz .'
+            }
+        }
+        stage('Docker Hub') {
+            steps {
+                script {
+                    echo 'Logging in to Docker Hub...'
+                }
+                sh 'docker login -u azizdevops12 -p dockeresprit12'
+                sh 'docker push azizdevops12/aziz'
+            }
+        }
+
+        stage('Docker-Compose') {
+            steps {
+                sh 'docker ps'
+                sh 'docker compose logs'
+		sh 'docker compose up -d'
+	        sh 'docker compose -f docker-compose.yml up -d mysql'
+
+            }
+        }
     }
 }
